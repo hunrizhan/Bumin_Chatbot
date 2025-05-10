@@ -1,14 +1,19 @@
 package com.example.bumin_chatbot;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
+import android.content.SharedPreferences;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
     private ExecutorService executorService;
     private Handler mainHandler;
 
-    // Replace with your actual Gemini API key
-    private static final String API_KEY = "AIzaSyDNI3Tm99z1CNl7PkUHytm0RHH_W1JWQys";
+    // API key is stored in BuildConfig
+    private static final String API_KEY = BuildConfig.GEMINI_API_KEY;
     private static final String GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -50,6 +55,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Set up action bar
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         // Initialize UI components
         chatRecyclerView = findViewById(R.id.chatRecyclerView);
         messageInput = findViewById(R.id.messageInput);
@@ -57,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize chat messages list and adapter
         chatMessages = new ArrayList<>();
-        chatAdapter = new ChatAdapter(chatMessages);
+        chatAdapter = new ChatAdapter(this, chatMessages);
 
         // Set up RecyclerView
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -72,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         mainHandler = new Handler(Looper.getMainLooper());
 
         // Add welcome message
-        chatMessages.add(new ChatMessage("Hello! I'm your Gemini-powered assistant. How can I help you today?", false));
+        chatMessages.add(new ChatMessage(getString(R.string.welcome_message), false));
         chatAdapter.notifyItemInserted(chatMessages.size() - 1);
 
         // Set up send button click listener
@@ -82,6 +92,39 @@ public class MainActivity extends AppCompatActivity {
                 sendMessage();
             }
         });
+    }
+
+    private void logout() {
+        // Clear any saved credentials
+        getSharedPreferences("UserPrefs", MODE_PRIVATE)
+                .edit()
+                .clear()
+                .apply();
+
+        // Navigate back to login screen
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_logout) {
+            logout();
+            return true;
+        } else if (id == R.id.action_profile) {
+            startActivity(new Intent(this, UserProfileActivity.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void sendMessage() {

@@ -1,0 +1,23 @@
+<resources>
+    <!-- Base application theme moved to themes.xml -->
+
+    <!-- Splash screen theme. -->
+    <style name="SplashTheme" parent="Theme.BuminChatbot">
+        <item name="android:windowBackground">@color/colorPrimary</item>
+    </style>
+
+    <!-- Custom styles for widgets -->
+    <style name="Widget.BuminChatbot.Button" parent="Widget.MaterialComponents.Button">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+
+    <style name="Widget.BuminChatbot.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusBottomEnd">8dp</item>
+        <item name="boxCornerRadiusBottomStart">8dp</item>
+        <item name="boxCornerRadiusTopEnd">8dp</item>
+        <item name="boxCornerRadiusTopStart">8dp</item>
+    </style>
+</resources>

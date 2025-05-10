@@ -1,56 +1,114 @@
 package com.example.bumin_chatbot;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.content.SharedPreferences;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.textfield.TextInputEditText;
+
 public class SignupActivity extends AppCompatActivity {
 
-    private EditText emailEditText, passwordEditText;
-    private Button signupButton, backToLoginButton;
+    private TextInputEditText editTextName, editTextEmail, editTextPassword, editTextConfirmPassword;
+    private Button buttonSignup;
+    private TextView textViewLogin;
+    private ImageButton buttonBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        emailEditText = findViewById(R.id.editTextEmail);
-        passwordEditText = findViewById(R.id.editTextPassword);
-        signupButton = findViewById(R.id.buttonSignup);
-        backToLoginButton = findViewById(R.id.buttonBackToLogin);
+        // Initialize views
+        editTextName = findViewById(R.id.editTextName);
+        editTextEmail = findViewById(R.id.editTextEmail);
+        editTextPassword = findViewById(R.id.editTextPassword);
+        editTextConfirmPassword = findViewById(R.id.editTextConfirmPassword);
+        buttonSignup = findViewById(R.id.buttonSignup);
+        textViewLogin = findViewById(R.id.textViewLogin);
+        buttonBack = findViewById(R.id.buttonBack);
 
-        signupButton.setOnClickListener(v -> {
-            String email = emailEditText.getText().toString().trim();
-            String password = passwordEditText.getText().toString();
-
-            if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Bilgileri boş bırakma", Toast.LENGTH_SHORT).show();
-                return;
+        // Set click listeners
+        buttonSignup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                registerUser();
             }
-
-            // 🔐 GİRİLEN BİLGİLERİ CİHAZA KAYDET
-            SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putString("email", email);
-            editor.putString("password", password);
-            editor.apply();
-
-            Toast.makeText(this, "Kayıt başarılı!", Toast.LENGTH_SHORT).show();
-
-            // LoginActivity'e geç
-            Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
-            startActivity(intent);
-            finish();
         });
 
-        backToLoginButton.setOnClickListener(v -> {
-            startActivity(new Intent(SignupActivity.this, LoginActivity.class));
-            finish();
+        textViewLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
         });
+
+        buttonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+
+    private void registerUser() {
+        String name = editTextName.getText().toString().trim();
+        String email = editTextEmail.getText().toString().trim();
+        String password = editTextPassword.getText().toString().trim();
+        String confirmPassword = editTextConfirmPassword.getText().toString().trim();
+
+        if (TextUtils.isEmpty(name)) {
+            editTextName.setError("Name is required");
+            editTextName.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(email)) {
+            editTextEmail.setError("Email is required");
+            editTextEmail.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(password)) {
+            editTextPassword.setError("Password is required");
+            editTextPassword.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(confirmPassword)) {
+            editTextConfirmPassword.setError("Confirm your password");
+            editTextConfirmPassword.requestFocus();
+            return;
+        }
+
+        if (!password.equals(confirmPassword)) {
+            editTextConfirmPassword.setError("Passwords do not match");
+            editTextConfirmPassword.requestFocus();
+            return;
+        }
+
+        SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        String existingEmail = prefs.getString("email", null);
+
+        if (email.equals(existingEmail)) {
+            Toast.makeText(this, "This email is already registered", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        prefs.edit()
+                .putString("email", email)
+                .putString("password", password)
+                .apply();
+
+        Toast.makeText(this, "Signup successful", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(this, LoginActivity.class));
+        finish();
     }
 }
