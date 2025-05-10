@@ -32,5 +32,9 @@
         <!-- User Profile ekranı -->
         <activity android:name=".UserProfileActivity" />
 
+        <activity android:name=".ForgotPasswordActivity" />
+
+        <activity android:name=".SettingsActivity" />
+
     </application>
 </manifest>

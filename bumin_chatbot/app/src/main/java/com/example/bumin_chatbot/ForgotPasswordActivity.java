@@ -2,6 +2,7 @@ package com.example.bumin_chatbot;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -65,7 +66,15 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             return;
         }
 
-        // In a real app, you would send a password reset email
+        // Check if email matches saved one
+        SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        String savedEmail = prefs.getString("email", null);
+
+        if (savedEmail == null || !savedEmail.equals(email)) {
+            Toast.makeText(this, "Email not found. Please sign up first.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         // For this demo, we'll just show a success message
         Toast.makeText(this, "Password reset link sent to " + email, Toast.LENGTH_LONG).show();
         startActivity(new Intent(ForgotPasswordActivity.this, LoginActivity.class));
