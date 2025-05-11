@@ -9,6 +9,21 @@
     <color name="colorText">#000000</color>
     <color name="colorTextSecondary">#757575</color>
 
+    <color name="chatUserBackground">#E0E0E0</color>
+    <color name="chatBotBackground">#FFFFFF</color>
+    <color name="chatText">#000000</color>
+    <color name="toolbarBackground">#FFFFFF</color> <!-- Gündüz -->
+    <color name="inputBackground">#FFFFFF</color> <!-- gündüz için -->
+    <color name="botTextColor">#000000</color>
+
+    
+
+<color name="textPrimary">#000000</color>
+
+    <color name="background">#F7F7F8</color>
+<color name="toolbarTitle">#000000</color>
+<color name="divider">#E0E0E0</color>
+
     <!-- System colors -->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>

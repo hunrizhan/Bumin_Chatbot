@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="chatUserBackground">#424242</color>
+    <color name="chatBotBackground">#303030</color>
+    <color name="chatText">#FFFFFF</color>
+    <color name="toolbarBackground">#121212</color> <!-- Gece -->
+    <color name="background">#121212</color>
+    <color name="inputBackground">#1E1E1E</color> <!-- gece için -->
+    <color name="botTextColor">#FFFFFF</color>
+
+   
+
+<color name="textPrimary">#FFFFFF</color>
+
+<color name="toolbarTitle">#FFFFFF</color>
+<color name="divider">#444444</color>
+
+
+</resources>
